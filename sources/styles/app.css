@@ -60,3 +60,6 @@
 .datatable_header{
     text-align: center;
 }
+.datatable-hover{
+    background: #40c0e0;
+}
