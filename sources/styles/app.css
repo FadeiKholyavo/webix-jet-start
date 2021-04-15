@@ -62,4 +62,5 @@
 }
 .datatable-hover{
     background: #40c0e0;
+    cursor: pointer;
 }
