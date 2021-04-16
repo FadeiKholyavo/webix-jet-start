@@ -50,22 +50,22 @@ export default class DataView extends JetView{
 												view: "button", 
 												value: "Save",
 												css: "webix_primary",		
-												click: () => {
-													this.saveData($$("countriesDatatable"), $$("countriesForm"));
+												click: function(){
+													this.$scope.saveData($$("countriesDatatable"), $$("countriesForm"));
 												}						
 											},
 											{ 
 												view: "button", 
 												value: "Clear",
-												click: () => {
-													this.clearForm($$("countriesDatatable"), $$("countriesForm"));
+												click: function(){
+													this.$scope.clearForm($$("countriesForm"));
 												}	
 											},
 											{ 
 												view: "button", 
 												value: "Unselect",
-												click: () => {
-													this.unselectItem($$("countriesDatatable"));
+												click: function(){
+													$$("countriesDatatable").unselectAll();
 												}
 											}
 										]
@@ -130,22 +130,22 @@ export default class DataView extends JetView{
 												view: "button", 
 												value: "Save",
 												css: "webix_primary",			
-												click: () => {
-													this.saveData($$("statusesDatatable"), $$("statusesForm"));
+												click: function(){
+													this.$scope.saveData($$("statusesDatatable"), $$("statusesForm"));
 												}					
 											},
 											{ 
 												view: "button", 
 												value: "Clear",
-												click: () => {
-													this.clearForm($$("statusesDatatable"), $$("statusesForm"));
+												click: function(){
+													this.$scope.clearForm($$("statusesForm"));
 												}		
 											},
 											{ 
 												view: "button", 
 												value: "Unselect",
-												click: () => {
-													this.unselectItem($$("statusesDatatable"));
+												click: function(){
+													$$("statusesDatatable").unselectAll();
 												}	
 											}
 										]
@@ -167,39 +167,36 @@ export default class DataView extends JetView{
 		$$("countriesForm").bind($$("countriesDatatable"));
 		$$("statusesForm").bind($$("statusesDatatable"));
 	}	
-	unselectItem(tableId){
-		tableId.unselectAll();
-	}
-	clearForm(tableId,formId){
+	clearForm(form){
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
 		}).then(
 			function(){
-				formId.clear();
-				formId.clearValidation();
+				form.clear();
+				form.clearValidation();
 			}
 		);
 	}
-	saveData(tableId,formId){
+	saveData(table,form){
 
-		if(formId.validate()){
+		if(form.validate()){
 			
-			const formItem = formId.getValues();
+			const formItem = form.getValues();
 			const formItemId = formItem.id;
 			
-			if(formId.isDirty()){
+			if(form.isDirty()){
 				//Protection against XSS
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Icon = formItem.Icon ? webix.template.escape(formItem.Icon): "";
 	
-				if(tableId.exists(formItemId)){
+				if(table.exists(formItemId)){
 	
-					formId.save();
+					form.save();
 	
 				}else{
 
-					formId.save(formItem);		
+					form.save(formItem);		
 
 				}
 	
@@ -217,18 +214,18 @@ export default class DataView extends JetView{
 			}	  
 		}
 	}
-	deleteItem(tableId, formId, tablelItemId){
+	deleteItem(table, form, tablelItemId){
 		webix.confirm({
 			title: "Country deleting",
 			text: "Do you really want to delete this country information"
 		}).then(
 			function(){
-				const formItemId = formId.getValues().id;
+				const formItemId = form.getValues().id;
 	
-				tableId.remove(tablelItemId);
+				table.remove(tablelItemId);
 
 				if(formItemId == tablelItemId.row){
-					formId.clear();
+					form.clear();
 				}
 			}
 		);
