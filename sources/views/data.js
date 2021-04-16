@@ -1,5 +1,7 @@
 import {JetView} from "webix-jet";
 import Datatable from "./common.js";
+import {countries} from "../models/countries.js";
+import {statuses} from "../models/statuses.js";
 
 export default class DataView extends JetView{
 	config(){
@@ -23,6 +25,7 @@ export default class DataView extends JetView{
 										return false;
 									}
 								},
+								data: countries
 							}),
 							{
 								view: "form",
@@ -96,6 +99,7 @@ export default class DataView extends JetView{
 										return false;
 									}
 								},	
+								data: statuses
 							}),
 							{	
 								view: "form",

@@ -11,7 +11,8 @@ export default class СontactsView extends JetView{
 					template: "<span><b>#id#. #Name#</b><br>Email: #Email#,<br> Country: #Country# <br> Status: #Status#</span>",
 					type:{
 						height: "auto"
-					}
+					},
+					data: contacts
 				},
 				{
 					view: "form",
@@ -76,8 +77,5 @@ export default class СontactsView extends JetView{
 				}
 			]
 		};
-	}
-	init(view){
-		view.queryView("list").parse(contacts);
 	}
 }
