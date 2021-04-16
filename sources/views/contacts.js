@@ -74,9 +74,9 @@ export default class СontactsView extends JetView{
 						country: webix.rules.isNotEmpty
 					}
 				}
-				]
-			};
-		}
+			]
+		};
+	}
 	init(view){
 		view.queryView("list").parse(contacts);
 	}

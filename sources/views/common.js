@@ -10,19 +10,19 @@ export default class CommonDatatableView extends JetView {
 	config(){
 		const datable = webix.extend({
 			view:"datatable",
-            scroll: "y",
-            select: true,
-            hover: "datatable-hover",
+			scroll: "y",
+			select: true,
+			hover: "datatable-hover",
 		}, this.settings);
 		
 		return datable;
 	}
-    init(view){
-        if(view.$scope.settings.id == "countriesDatatable"){
-            view.parse(countries)
-        }
-        if(view.$scope.settings.id == "statusesDatatable"){
-            view.parse(statuses)
-        }
+	init(view){
+		if(view.$scope.settings.id == "countriesDatatable"){
+			view.parse(countries);
+		}
+		if(view.$scope.settings.id == "statusesDatatable"){
+			view.parse(statuses);
+		}
 	}
 }

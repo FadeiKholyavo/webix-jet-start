@@ -7,9 +7,9 @@ export default class DataView extends JetView{
 			view:"tabview",
 			cells: [
 				{
-				  header: "Countries",
-				  body: {
-					  cols:[
+					header: "Countries",
+					body:{
+						cols:[
 							new Datatable(this.app, "", {
 								id: "countriesDatatable",
 								columns: [
@@ -75,8 +75,8 @@ export default class DataView extends JetView{
 									},
 								}
 							}
-					  ]
-				  }
+						]
+					}
 				},
 				{
 					header: "Statuses",
@@ -89,20 +89,20 @@ export default class DataView extends JetView{
 									{id: "Name", header: "Name", fillspace:true},
 									{id: "Icon", header:{text: "Icon", css:"datatable_header"}, css:"datatable_header", width: 100},
 									{id:"delete", header: "", template:"{common.trashIcon()}", width: 60}
-								 ],
-								 onClick: {
+								],
+								onClick: {
 									"wxi-trash":(e, id) =>{
 										this.deleteItem($$("statusesDatatable"), $$("statusesForm"), id);
 										return false;
 									}
 								},	
-							  }),
-							  {	
-								  view: "form",
-								  id: "statusesForm",
-								  width: 300,
-								  elements:[
-									  {
+							}),
+							{	
+								view: "form",
+								id: "statusesForm",
+								width: 300,
+								elements:[
+									{
 										view: "template",
 										template: "edit status",
 										type: "section",
@@ -147,28 +147,26 @@ export default class DataView extends JetView{
 										]
 									},
 									{}
-								  ],
-								  rules:{
+								],
+								rules:{
 									Name: webix.rules.isNotEmpty,
 									Icon: webix.rules.isNotEmpty
 								}
-							  }
-							]
+							}
+						]
 					}
-				  },
-			  ]
-		  };
+				},
+			]
+		};
 	}
 	ready(){
 		$$("countriesForm").bind($$("countriesDatatable"));
 		$$("statusesForm").bind($$("statusesDatatable"));
-	};	
+	}	
 	unselectItem(tableId){
 		tableId.unselectAll();
-	};
+	}
 	clearForm(tableId,formId){
-		const formItem = formId.getValues();
-		const formItemId = formItem.id;
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
@@ -177,8 +175,8 @@ export default class DataView extends JetView{
 				formId.clear();
 				formId.clearValidation();
 			}
-		)
-	};
+		);
+	}
 	saveData(tableId,formId){
 
 		if(formId.validate()){
@@ -199,7 +197,7 @@ export default class DataView extends JetView{
 
 					formId.save(formItem);		
 
-				};
+				}
 	
 				webix.message({
 					text: "Validation is succsessful",
@@ -212,10 +210,9 @@ export default class DataView extends JetView{
 					type: "info",
 					expire: 1000
 				});
-			}
-				  
-	   }
-	};
+			}	  
+		}
+	}
 	deleteItem(tableId, formId, tablelItemId){
 		webix.confirm({
 			title: "Country deleting",
@@ -230,6 +227,6 @@ export default class DataView extends JetView{
 					formId.clear();
 				}
 			}
-		)
+		);
 	}
 }
