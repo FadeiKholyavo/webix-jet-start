@@ -3,8 +3,8 @@ import {JetView} from "webix-jet";
 export default class CommonDatatableView extends JetView {
 	constructor(app, name, settings){
 		super(app, name); 
-		this.tableSettings = settings;
-		this.formSettings = settings;
+		this.tableSettings = settings.table;
+		this.formSettings = settings.form;
 	}
 	config(){
 
@@ -60,8 +60,7 @@ export default class CommonDatatableView extends JetView {
 			width: 300,
 			elements: elements,
 			rules: this.formSettings.rules
-			
-
+	
 		}, this.formSettings);
 
 		return {cols:[
