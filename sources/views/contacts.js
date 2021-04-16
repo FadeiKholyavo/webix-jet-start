@@ -70,7 +70,6 @@ export default class СontactsView extends JetView{
 					],
 					rules:{
 						name: webix.rules.isNotEmpty,
-						email: webix.rules.isNotEmpty,
 						email: webix.rules.isEmail,
 						status: webix.rules.isNumber,
 						country: webix.rules.isNotEmpty
