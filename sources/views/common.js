@@ -1,75 +1,111 @@
 import {JetView} from "webix-jet";
 
+
 export default class CommonDatatableView extends JetView {
-	constructor(app, name, settings){
+	constructor(app, name, settings, data){
 		super(app, name); 
-		this.tableSettings = settings.table;
-		this.formSettings = settings.form;
+		this.settings = settings;
+		this.data = data;
 	}
 	config(){
-
-		const columns = this.tableSettings.columns;
-			
+		
 		const datatable = webix.extend({
 			view:"datatable",
 			scroll: "y",
 			select: true,
 			localId: "datatable",
 			hover: "datatable-hover",
-			columns: columns,
+			autoConfig: true,
 			onClick: {
 				"wxi-trash":(e, id) =>{
 					this.deleteItem(this.$$("datatable"),this.$$("form"), id);
 					return false;
 				}
 			}
-		}, this.tableSettings);
+		}, this.settings);
 
-		const elements = this.formSettings.fields;
-
+		const elements = [];
+		elements.push({
+			view: "template",
+			template: "edit data",
+			type: "section",
+			css: "section-font-size"
+		});
+		this.settings.forEach( el =>{
+			elements.push({
+				view: "text",
+				label: el,
+				name: el.toLowerCase(),
+				invalidMessage: `Enter the ${el.toLowerCase()}` 
+			});
+		});
 		elements.push({			
 			cols:[
 				{ 
 					view: "button", 
 					value: "Save",
 					css: "webix_primary",		
-					click: function(){
-						this.$scope.saveData(this.$scope.$$("datatable"),this.$scope.$$("form"));
+					click: () => {
+						this.saveData(this.$$("datatable"),this.$$("form"));
 					}						
 				},
 				{ 
 					view: "button", 
 					value: "Clear",
-					click: function(){
-						this.$scope.clearForm(this.$scope.$$("form"));
+					click: () => {
+						this.clearForm(this.$$("form"));
 					}	
 				},
 				{ 
 					view: "button", 
 					value: "Unselect",
-					click: function(){
-						this.$scope.$$("datatable").unselectAll();
+					click: () => {
+						this.$$("datatable").unselectAll();
 					}
 				}
 			]
 		});
 		elements.push({});
+
 		const form = webix.extend({
 			view:"form",
 			localId: "form",
 			width: 300,
 			elements: elements,
-			rules: this.formSettings.rules
-	
-		}, this.formSettings);
+			rules:{
+				country: webix.rules.isNotEmpty,
+				status: webix.rules.isNotEmpty,
+				icon: webix.rules.isNotEmpty
+			}
+		}, this.settings);
 
 		return {cols:[
 			datatable,
 			form
 		]};
 	}
+	init(){
+		this.$$("datatable").parse(this.data);
+	}
 	ready(){
-		this.$$("form").bind(this.$$("datatable"));
+		const dataTable = this.$$("datatable");
+		dataTable.config.columns.unshift(
+			{ 
+				id:"id", 
+				header: "id", 
+				width: 60
+			}
+		);
+		dataTable.config.columns.push(
+			{ 
+				id:"delete", 
+				header: "", 
+				template:"{common.trashIcon()}", 
+				width: 60
+			}
+		);
+		dataTable.refreshColumns();
+		this.$$("form").bind(dataTable);
 	}
 	clearForm(form){
 		webix.confirm({
