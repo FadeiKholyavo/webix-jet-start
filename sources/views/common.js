@@ -35,7 +35,7 @@ export default class CommonDatatableView extends JetView {
 			elements.push({
 				view: "text",
 				label: el,
-				name: el.toLowerCase(),
+				name: el,
 				invalidMessage: `Enter the ${el.toLowerCase()}` 
 			});
 		});
@@ -73,9 +73,7 @@ export default class CommonDatatableView extends JetView {
 			width: 300,
 			elements: elements,
 			rules:{
-				country: webix.rules.isNotEmpty,
-				status: webix.rules.isNotEmpty,
-				icon: webix.rules.isNotEmpty
+				Name: webix.rules.isNotEmpty,
 			}
 		}, this.settings);
 
@@ -88,6 +86,10 @@ export default class CommonDatatableView extends JetView {
 		this.$$("datatable").parse(this.data);
 	}
 	ready(){
+		const form = this.$$("form");
+		if(Object.values(form.config).indexOf("Icon") == 1){
+			form.config.rules.Icon = webix.rules.isNotEmpty;
+		}
 		const dataTable = this.$$("datatable");
 		dataTable.config.columns.unshift(
 			{ 
@@ -105,7 +107,7 @@ export default class CommonDatatableView extends JetView {
 			}
 		);
 		dataTable.refreshColumns();
-		this.$$("form").bind(dataTable);
+		form.bind(dataTable);
 	}
 	clearForm(form){
 		webix.confirm({
@@ -125,11 +127,12 @@ export default class CommonDatatableView extends JetView {
 			const formItem = form.getValues();
 			const formItemId = formItem.id;
 			
+			
 			if(form.isDirty()){
 				//Protection against XSS
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Icon = formItem.Icon ? webix.template.escape(formItem.Icon): "";
-	
+
 				if(table.exists(formItemId)){
 	
 					form.save();
