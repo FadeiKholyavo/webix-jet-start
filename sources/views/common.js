@@ -9,7 +9,7 @@ export default class CommonDatatableView extends JetView {
 	}
 	config(){
 		
-		const datatable = webix.extend({
+		const datatable = {
 			view:"datatable",
 			scroll: "y",
 			select: true,
@@ -22,21 +22,32 @@ export default class CommonDatatableView extends JetView {
 					return false;
 				}
 			}
-		}, this.settings);
+		};
 
 		const elements = [];
+
+		const form = {
+			view:"form",
+			localId: "form",
+			width: 300,
+			elements: elements,
+			rules:{}
+		};
+
 		elements.push({
 			view: "template",
 			template: "edit data",
 			type: "section",
 			css: "section-font-size"
 		});
+
 		this.settings.forEach( el =>{
+			form.rules[el] = webix.rules.isNotEmpty
 			elements.push({
 				view: "text",
 				label: el,
 				name: el,
-				invalidMessage: `Enter the ${el.toLowerCase()}` 
+				invalidMessage: `Enter the ${el.toLowerCase()}`,
 			});
 		});
 		elements.push({			
@@ -67,16 +78,6 @@ export default class CommonDatatableView extends JetView {
 		});
 		elements.push({});
 
-		const form = webix.extend({
-			view:"form",
-			localId: "form",
-			width: 300,
-			elements: elements,
-			rules:{
-				Name: webix.rules.isNotEmpty,
-			}
-		}, this.settings);
-
 		return {cols:[
 			datatable,
 			form
@@ -86,10 +87,6 @@ export default class CommonDatatableView extends JetView {
 		this.$$("datatable").parse(this.data);
 	}
 	ready(){
-		const form = this.$$("form");
-		if(Object.values(form.config).indexOf("Icon") == 1){
-			form.config.rules.Icon = webix.rules.isNotEmpty;
-		}
 		const dataTable = this.$$("datatable");
 		dataTable.config.columns.unshift(
 			{ 
@@ -107,7 +104,7 @@ export default class CommonDatatableView extends JetView {
 			}
 		);
 		dataTable.refreshColumns();
-		form.bind(dataTable);
+		this.$$("form").bind(dataTable);
 	}
 	clearForm(form){
 		webix.confirm({
@@ -160,7 +157,7 @@ export default class CommonDatatableView extends JetView {
 	deleteItem(table, form, tablelItemId){
 		webix.confirm({
 			title: "Country deleting",
-			text: "Do you really want to delete this country information"
+			text: "Do you really want to delete this information"
 		}).then(
 			function(){
 				const formItemId = form.getValues().id;
