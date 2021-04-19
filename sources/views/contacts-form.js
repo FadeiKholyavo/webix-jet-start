@@ -36,14 +36,24 @@ export default class СontactsFormView extends JetView{
 					label: _("Status"),
 					name: "Status",
 					invalidMessage: "Status cannot be empty",
-					options: statuses
+					options: {
+						body: {
+							template: "#Name#",
+							data: statuses,	 
+						}
+					 }
 				},
 				{ 
 					view: "combo",
 					label: _("Country"),
 					name: "Country",
 					invalidMessage: "Country cannot be empty",
-					options: countries
+					options: {
+						body: {
+							template: "#Name#",
+							data: countries, 
+						}
+					 }		
 				},
 				{
 					cols:[
