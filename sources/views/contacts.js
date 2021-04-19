@@ -14,6 +14,11 @@ export default class СontactsView extends JetView{
 					type:{
 						height: "auto"
 					},
+					on:{
+						"onItemClick": (id) =>{
+							this.setParam("user", id, true);
+						}
+					},
 					onClick: {
 						"wxi-close":(e, id)=>{
 							webix.confirm({
