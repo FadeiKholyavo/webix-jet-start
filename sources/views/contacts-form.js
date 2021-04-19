@@ -85,6 +85,14 @@ export default class СontactsFormView extends JetView{
 			}	
 		};
 	}
+	urlChange(view, url){
+		if(!!url[0].params.user && contacts.exists(url[0].params.user)){
+			const id = url[0].params.user;
+			this.$$("contactsForm").setValues(contacts.getItem(id));
+		}else{
+			this.$$("contactsForm").clear()
+		}
+	}
 	clearForm(form){
 		webix.confirm({
 			title: "Form cleaning",
