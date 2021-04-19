@@ -125,7 +125,7 @@ export default class CommonDatatableView extends JetView {
 	addFields(form, _){
 		form.elements.push({
 			view: "template",
-			template: _("edit data"),
+			template: _("EditData"),
 			type: "section",
 			css: "section-font-size"
 		});

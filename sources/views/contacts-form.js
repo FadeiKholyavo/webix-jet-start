@@ -15,7 +15,7 @@ export default class СontactsFormView extends JetView{
 			elements: [
 				{
 					view: "template",
-					template: _("edit user"),
+					template: _("EditUser"),
 					type: "section",
 					css: "section-font-size"
 				},
