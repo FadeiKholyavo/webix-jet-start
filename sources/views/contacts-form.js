@@ -109,8 +109,9 @@ export default class СontactsFormView extends JetView{
 			form.clear();
 		}
 	}
-	clearForm(form){
-		const list = this.getSubView().contactsList;
+	clearForm(){
+		const list = this.contactsList;
+		const form = this.contactsForm;
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
