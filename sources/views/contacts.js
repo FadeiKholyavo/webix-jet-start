@@ -7,12 +7,12 @@ export default class СontactsView extends JetView{
 			cols:[
 				{					
 					view:"list",
+					localId: "contactsList",
 					select:true,
 					template: "<span><b>#id#. #Name#</b><br>Email: #Email#,<br> Country: #Country# <br> Status: #Status#</span>",
 					type:{
 						height: "auto"
-					},
-					data: contacts
+					}
 				},
 				{
 					view: "form",
@@ -77,5 +77,8 @@ export default class СontactsView extends JetView{
 				}
 			]
 		};
+	}
+	init(){
+		this.$$("contactsList").parse(contacts);
 	}
 }
