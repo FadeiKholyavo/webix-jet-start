@@ -10,10 +10,31 @@ export default class СontactsView extends JetView{
 					view:"list",
 					localId: "contactsList",
 					select:true,
-					template: "<span><b>#id#. #Name#</b><br>Email: #Email#,<br> Country: #Country# <br> Status: #Status#</span>",
+					template: "<div class=\"item-justify\"><span><b>#id#. #Name#</b><br>Email: #Email#,<br> Country: #Country# <br> Status: #Status#</span><span class=\"webix_icon wxi-close\"></span></div>",
 					type:{
 						height: "auto"
-					}
+					},
+					onClick: {
+						"wxi-close":(e, id)=>{
+							webix.confirm({
+								title: "User deleting",
+								text: "Do you really want to delete this user's information"
+							}).then(()=>{
+									const list = this.$$("contactsList");
+									contacts.remove(id);
+									const newItemId = Object.keys(list.data.pull)[0];
+									if(!newItemId){
+										this.app.show("/top/contacts")
+									}else{
+										this.setParam("user", newItemId, true);
+										list.select(newItemId);
+									}
+
+								}
+							)
+							return false;
+						}
+					},
 				},
 				ContactsForm
 			]

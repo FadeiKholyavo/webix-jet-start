@@ -24,3 +24,8 @@
 .section-font-size > .webix_template {
     font-size: 14px;
 }
+.item-justify{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
