@@ -62,14 +62,14 @@ export default class СontactsFormView extends JetView{
 							value: _("Save"),
 							css: "webix_primary",		
 							click: () =>{
-								this.saveData(this.getSubView().contactsList,this.contactsForm);
+								this.saveData();
 							}						
 						},
 						{ 
 							view: "button", 
 							value: _("Clear"),	
 							click: () =>{
-								this.clearForm(this.contactsForm);
+								this.clearForm();
 							}	
 
 						},
@@ -78,7 +78,7 @@ export default class СontactsFormView extends JetView{
 							value: _("Unselect"),	
 							height: 45,
 							click: ()=>{
-								this.getSubView().contactsList.unselectAll();
+								this.contactsList.unselectAll();
 								this.app.show("/top/contacts");
 								this.contactsForm.clear();
 									
@@ -98,13 +98,15 @@ export default class СontactsFormView extends JetView{
 	}
 	init(){
 		this.contactsForm = this.$$("contactsForm");
+		this.contactsList= this.getParentView().$$("contactsList");
 	}
 	urlChange(view, url){
-		if(!!url[0].params.user && contacts.exists(url[0].params.user)){
-			const id = url[0].params.user;
-			this.contactsForm.setValues(contacts.getItem(id));
+		const form = this.contactsForm;
+		const id = url[0].params.user;
+		if(!!id && contacts.exists(id)){
+			form.setValues(contacts.getItem(id));
 		}else{
-			this.contactsForm.clear();
+			form.clear();
 		}
 	}
 	clearForm(form){
@@ -123,7 +125,8 @@ export default class СontactsFormView extends JetView{
 			}
 		);
 	}
-	saveData(table,form){
+	saveData(){
+		const form = this.contactsForm;
 
 		if(form.validate()){
 			
@@ -135,7 +138,7 @@ export default class СontactsFormView extends JetView{
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Email =  webix.template.escape(formItem.Email);
 	
-				if(table.exists(formItemId)){
+				if(this.contactsList.exists(formItemId)){
 	
 					contacts.updateItem(formItemId, formItem);
 	
@@ -158,21 +161,5 @@ export default class СontactsFormView extends JetView{
 				});
 			}	  
 		}
-	}
-	deleteItem(table, form, tablelItemId){
-		webix.confirm({
-			title: "Country deleting",
-			text: "Do you really want to delete this country information"
-		}).then(
-			function(){
-				const formItemId = form.getValues().id;
-	
-				table.remove(tablelItemId);
-
-				if(formItemId == tablelItemId.row){
-					form.clear();
-				}
-			}
-		);
 	}
 }

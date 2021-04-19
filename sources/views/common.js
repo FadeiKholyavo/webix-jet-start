@@ -18,7 +18,7 @@ export default class CommonDatatableView extends JetView {
 			columns:[],
 			onClick: {
 				"wxi-trash":(e, id) =>{
-					this.deleteItem(this.datatable,this.form, id);
+					this.deleteItem(id);
 					return false;
 				}
 			}
@@ -47,8 +47,8 @@ export default class CommonDatatableView extends JetView {
 		this.datatable.parse(this.data);
 	}
 	ready(){
+		
 		const dataTable = this.datatable;
-	
 		dataTable.config.columns.push(
 			{ 
 				id:"delete", 
@@ -60,7 +60,8 @@ export default class CommonDatatableView extends JetView {
 		dataTable.refreshColumns();
 		this.form.bind(dataTable);
 	}
-	clearForm(form){
+	clearForm(){
+		const form = this.form;
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
@@ -71,7 +72,9 @@ export default class CommonDatatableView extends JetView {
 			}
 		);
 	}
-	saveData(table,form){
+	saveData(){
+		const form = this.form;
+		const table = this.datatable;
 
 		if(form.validate()){
 			
@@ -108,14 +111,15 @@ export default class CommonDatatableView extends JetView {
 			}	  
 		}
 	}
-	deleteItem(table, form, tablelItemId){
+	deleteItem(tablelItemId){
+		const form = this.form;
+		const table = this.datatable;
 		webix.confirm({
 			title: "Country deleting",
 			text: "Do you really want to delete this information"
 		}).then(
 			function(){
 				const formItemId = form.getValues().id;
-	
 				table.remove(tablelItemId);
 
 				if(formItemId == tablelItemId.row){
@@ -148,14 +152,14 @@ export default class CommonDatatableView extends JetView {
 					value: this._("Save"),
 					css: "webix_primary",		
 					click: () => {
-						this.saveData(this.datatable,this.form);
+						this.saveData();
 					}						
 				},
 				{ 
 					view: "button", 
 					value: this._("Clear"),
 					click: () => {
-						this.clearForm(this.form);
+						this.clearForm();
 					}	
 				},
 				{ 
