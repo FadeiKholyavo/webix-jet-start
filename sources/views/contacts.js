@@ -28,14 +28,10 @@ export default class СontactsView extends JetView{
 							}).then(()=>{
 								const list = this.contactsList;
 								contacts.remove(id);
-								const newItemId = list.getFirstId();
+								const newItemId = list.getSelectedId();
 								if(!newItemId){
 									this.app.show("/top/contacts");
-								}else{
-									this.setParam("user", newItemId, true);
-									list.select(newItemId);
 								}
-
 							}
 							);
 							return false;
@@ -50,13 +46,14 @@ export default class СontactsView extends JetView{
 		this.contactsList = this.$$("contactsList");
 		this.contactsList.parse(contacts);
 	}
-	ready(view, url){
+	urlChange(view, url){
 		const id = url[0].params.user;
 		if(!!id && contacts.exists(id)){
 			this.contactsList.select(id);
 		}else{
-			this.setParam("user", 1, true);
-			this.contactsList.select(1);
+			const contactId = contacts.getFirstId();
+			this.setParam("user", contactId, true);
+			this.contactsList.select(contactId);
 		}
 	}
 }
