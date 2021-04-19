@@ -139,7 +139,7 @@ export default class СontactsFormView extends JetView{
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Email =  webix.template.escape(formItem.Email);
 	
-				if(this.contactsList.exists(formItemId)){
+				if(contacts.exists(formItemId)){
 	
 					contacts.updateItem(formItemId, formItem);
 	
