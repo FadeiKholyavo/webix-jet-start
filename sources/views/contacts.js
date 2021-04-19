@@ -22,4 +22,12 @@ export default class СontactsView extends JetView{
 	init(){
 		this.$$("contactsList").parse(contacts);
 	}
+	ready(view, url){
+		if(!!url[0].params.user && contacts.exists(url[0].params.user)){
+			this.$$("contactsList").select(url[0].params.user)
+		}else{
+			this.setParam("user", 1, true);
+			this.$$("contactsList").select(1)
+		}
+	}
 }
