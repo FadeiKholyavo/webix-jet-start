@@ -47,6 +47,7 @@ export default class СontactsView extends JetView{
 		};
 	}
 	init(){
+		this.contactsList = this.$$("contactsList");
 		this.contactsList.parse(contacts);
 	}
 	ready(view, url){
@@ -57,8 +58,5 @@ export default class СontactsView extends JetView{
 			this.setParam("user", 1, true);
 			this.contactsList.select(1);
 		}
-	}
-	get contactsList(){
-		return this.$$("contactsList");
 	}
 }

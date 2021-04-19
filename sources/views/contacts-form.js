@@ -96,6 +96,9 @@ export default class СontactsFormView extends JetView{
 			}	
 		};
 	}
+	init(){
+		this.contactsForm = this.$$("contactsForm");
+	}
 	urlChange(view, url){
 		if(!!url[0].params.user && contacts.exists(url[0].params.user)){
 			const id = url[0].params.user;
@@ -171,8 +174,5 @@ export default class СontactsFormView extends JetView{
 				}
 			}
 		);
-	}
-	get contactsForm(){
-		return this.$$("contactsForm");
 	}
 }

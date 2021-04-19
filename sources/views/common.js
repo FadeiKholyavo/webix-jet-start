@@ -42,11 +42,13 @@ export default class CommonDatatableView extends JetView {
 		]};
 	}
 	init(){
+		this.datatable = this.$$("datatable");
+		this.form = this.$$("form");
 		this.datatable.parse(this.data);
 	}
 	ready(){
 		const dataTable = this.datatable;
-
+	
 		dataTable.config.columns.push(
 			{ 
 				id:"delete", 
@@ -176,12 +178,6 @@ export default class CommonDatatableView extends JetView {
 				fillspace: true
 			};
 		});
-	}
-	get datatable(){
-		return this.$$("datatable");
-	}
-	get form(){
-		return this.$$("form");
 	}
 }
 
