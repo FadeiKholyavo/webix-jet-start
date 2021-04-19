@@ -6,9 +6,9 @@ export default class CommonDatatableView extends JetView {
 		super(app, name); 
 		this.settings = settings;
 		this.data = data;
+		this._ = this.app.getService("locale")._;
 	}
 	config(){		
-		const _ = this.app.getService("locale")._;
 		const datatable = {
 			view:"datatable",
 			scroll: "y",
@@ -24,7 +24,7 @@ export default class CommonDatatableView extends JetView {
 			}
 		};
 
-		this.addColumns(datatable, _);
+		this.addColumns(datatable);
 		
 		const form = {
 			view:"form",
@@ -34,7 +34,7 @@ export default class CommonDatatableView extends JetView {
 			rules:{}
 		};
 
-		this.addFields(form, _);
+		this.addFields(form);
 
 		return {cols:[
 			datatable,
@@ -122,10 +122,10 @@ export default class CommonDatatableView extends JetView {
 			}
 		);
 	}
-	addFields(form, _){
+	addFields(form){
 		form.elements.push({
 			view: "template",
-			template: _("EditData"),
+			template: this._("EditData"),
 			type: "section",
 			css: "section-font-size"
 		});
@@ -134,7 +134,7 @@ export default class CommonDatatableView extends JetView {
 			form.rules[el] = webix.rules.isNotEmpty;
 			form.elements.push({
 				view: "text",
-				label: _(el),
+				label: this. _(el),
 				name: el,
 				invalidMessage: `Enter the ${el.toLowerCase()}`,
 			});
@@ -143,7 +143,7 @@ export default class CommonDatatableView extends JetView {
 			cols:[
 				{ 
 					view: "button", 
-					value: _("Save"),
+					value: this._("Save"),
 					css: "webix_primary",		
 					click: () => {
 						this.saveData(this.datatable,this.form);
@@ -151,14 +151,14 @@ export default class CommonDatatableView extends JetView {
 				},
 				{ 
 					view: "button", 
-					value: _("Clear"),
+					value: this._("Clear"),
 					click: () => {
 						this.clearForm(this.form);
 					}	
 				},
 				{ 
 					view: "button", 
-					value: _("Unselect"),
+					value: this._("Unselect"),
 					height: 45,
 					click: () => {
 						this.datatable.unselectAll();
@@ -168,11 +168,11 @@ export default class CommonDatatableView extends JetView {
 		});
 		form.elements.push({});
 	}
-	addColumns(datatable, _){
+	addColumns(datatable){
 		datatable.columns = Object.keys(this.data[0]).map(key => {
 			return				{ 
 				id: key, 
-				header: _(key), 
+				header: this._(key), 
 				fillspace: true
 			};
 		});
