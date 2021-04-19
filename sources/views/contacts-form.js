@@ -130,7 +130,7 @@ export default class СontactsFormView extends JetView{
 			if(form.isDirty()){
 				//Protection against XSS
 				formItem.Name = webix.template.escape(formItem.Name);
-				formItem.Icon = formItem.Icon ? webix.template.escape(formItem.Icon): "";
+				formItem.Email =  webix.template.escape(formItem.Email);
 	
 				if(table.exists(formItemId)){
 	
