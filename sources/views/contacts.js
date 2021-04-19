@@ -26,7 +26,7 @@ export default class СontactsView extends JetView{
 								title: "User deleting",
 								text: "Do you really want to delete this user's information"
 							}).then(()=>{
-								const list = this.getContactsList();
+								const list = this.contactsList;
 								contacts.remove(id);
 								const newItemId = list.getFirstId();
 								if(!newItemId){
@@ -47,18 +47,18 @@ export default class СontactsView extends JetView{
 		};
 	}
 	init(){
-		this.$$("contactsList").parse(contacts);
+		this.contactsList.parse(contacts);
 	}
 	ready(view, url){
 		const id = url[0].params.user;
 		if(!!id && contacts.exists(id)){
-			this.getContactsList().select(id);
+			this.contactsList.select(id);
 		}else{
 			this.setParam("user", 1, true);
-			this.getContactsList().select(1);
+			this.contactsList.select(1);
 		}
 	}
-	getContactsList(){
+	get contactsList(){
 		return this.$$("contactsList");
 	}
 }

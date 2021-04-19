@@ -18,7 +18,7 @@ export default class CommonDatatableView extends JetView {
 			columns:[],
 			onClick: {
 				"wxi-trash":(e, id) =>{
-					this.deleteItem(this.getDatatable(),this.getForm(), id);
+					this.deleteItem(this.datatable,this.form, id);
 					return false;
 				}
 			}
@@ -42,10 +42,10 @@ export default class CommonDatatableView extends JetView {
 		]};
 	}
 	init(){
-		this.getDatatable().parse(this.data);
+		this.datatable.parse(this.data);
 	}
 	ready(){
-		const dataTable = this.getDatatable();
+		const dataTable = this.datatable;
 
 		dataTable.config.columns.push(
 			{ 
@@ -56,7 +56,7 @@ export default class CommonDatatableView extends JetView {
 			}
 		);
 		dataTable.refreshColumns();
-		this.getForm().bind(dataTable);
+		this.form.bind(dataTable);
 	}
 	clearForm(form){
 		webix.confirm({
@@ -146,14 +146,14 @@ export default class CommonDatatableView extends JetView {
 					value: _("Save"),
 					css: "webix_primary",		
 					click: () => {
-						this.saveData(this.getDatatable(),this.getForm());
+						this.saveData(this.datatable,this.form);
 					}						
 				},
 				{ 
 					view: "button", 
 					value: _("Clear"),
 					click: () => {
-						this.clearForm(this.getForm());
+						this.clearForm(this.form);
 					}	
 				},
 				{ 
@@ -161,7 +161,7 @@ export default class CommonDatatableView extends JetView {
 					value: _("Unselect"),
 					height: 45,
 					click: () => {
-						this.getDatatable().unselectAll();
+						this.datatable.unselectAll();
 					}
 				}
 			]
@@ -177,10 +177,10 @@ export default class CommonDatatableView extends JetView {
 			};
 		});
 	}
-	getDatatable(){
+	get datatable(){
 		return this.$$("datatable");
 	}
-	getForm(){
+	get form(){
 		return this.$$("form");
 	}
 }

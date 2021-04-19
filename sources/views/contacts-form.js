@@ -62,14 +62,14 @@ export default class СontactsFormView extends JetView{
 							value: _("Save"),
 							css: "webix_primary",		
 							click: () =>{
-								this.saveData(this.getSubView().getContactsList(),this.getContactsForm());
+								this.saveData(this.getSubView().contactsList,this.contactsForm);
 							}						
 						},
 						{ 
 							view: "button", 
 							value: _("Clear"),	
 							click: () =>{
-								this.clearForm(this.getContactsForm());
+								this.clearForm(this.contactsForm);
 							}	
 
 						},
@@ -78,9 +78,9 @@ export default class СontactsFormView extends JetView{
 							value: _("Unselect"),	
 							height: 45,
 							click: ()=>{
-								this.getSubView().getContactsList().unselectAll();
+								this.getSubView().contactsList.unselectAll();
 								this.app.show("/top/contacts");
-								this.getContactsForm().clear();
+								this.contactsForm.clear();
 									
 							}
 						}
@@ -99,13 +99,13 @@ export default class СontactsFormView extends JetView{
 	urlChange(view, url){
 		if(!!url[0].params.user && contacts.exists(url[0].params.user)){
 			const id = url[0].params.user;
-			this.getContactsForm().setValues(contacts.getItem(id));
+			this.contactsForm.setValues(contacts.getItem(id));
 		}else{
-			this.getContactsForm().clear();
+			this.contactsForm.clear();
 		}
 	}
 	clearForm(form){
-		const list = this.getSubView().getContactsList();
+		const list = this.getSubView().contactsList;
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
@@ -172,7 +172,7 @@ export default class СontactsFormView extends JetView{
 			}
 		);
 	}
-	getContactsForm(){
+	get contactsForm(){
 		return this.$$("contactsForm");
 	}
 }
