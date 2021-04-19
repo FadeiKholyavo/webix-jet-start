@@ -28,7 +28,7 @@ export default class СontactsView extends JetView{
 							}).then(()=>{
 								const list = this.getContactsList();
 								contacts.remove(id);
-								const newItemId = Object.keys(list.data.pull)[0];
+								const newItemId = list.getFirstId();
 								if(!newItemId){
 									this.app.show("/top/contacts");
 								}else{
