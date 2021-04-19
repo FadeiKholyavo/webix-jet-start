@@ -41,7 +41,7 @@ export default class СontactsFormView extends JetView{
 							template: "#Name#",
 							data: statuses,	 
 						}
-					 }
+					}
 				},
 				{ 
 					view: "combo",
@@ -53,7 +53,7 @@ export default class СontactsFormView extends JetView{
 							template: "#Name#",
 							data: countries, 
 						}
-					 }		
+					}		
 				},
 				{
 					cols:[
@@ -79,7 +79,7 @@ export default class СontactsFormView extends JetView{
 							height: 45,
 							click: ()=>{
 								this.getSubView().getContactsList().unselectAll();
-								this.setParam("user", "", true);
+								this.app.show("/top/contacts");
 								this.getContactsForm().clear();
 									
 							}
@@ -105,12 +105,17 @@ export default class СontactsFormView extends JetView{
 		}
 	}
 	clearForm(form){
+		const list = this.getSubView().getContactsList();
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
 		}).then(
 			function(){
+				const id = form.getValues().id;
 				form.clear();
+				if(id == list.getSelectedId()){
+					form.setValues({id: id });
+				}
 				form.clearValidation();
 			}
 		);

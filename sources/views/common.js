@@ -24,7 +24,7 @@ export default class CommonDatatableView extends JetView {
 			}
 		};
 
-		this.addColumns(datatable, _)
+		this.addColumns(datatable, _);
 		
 		const form = {
 			view:"form",
@@ -34,7 +34,7 @@ export default class CommonDatatableView extends JetView {
 			rules:{}
 		};
 
-		this.addFields(form, _)
+		this.addFields(form, _);
 
 		return {cols:[
 			datatable,
@@ -174,7 +174,7 @@ export default class CommonDatatableView extends JetView {
 				id: key, 
 				header: _(key), 
 				fillspace: true
-			}
+			};
 		});
 	}
 	getDatatable(){
