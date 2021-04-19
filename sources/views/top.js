@@ -4,9 +4,10 @@ import {JetView, plugins} from "webix-jet";
 
 export default class TopView extends JetView{
 	config(){
+		const _ = this.app.getService("locale")._;
 		const header = {
 			type:"header", 
-			template:this.app.config.name, 
+			template: _(this.app.config.name), 
 			css:"webix_header app_header"
 		};
 
@@ -19,9 +20,9 @@ export default class TopView extends JetView{
 			select:true,
 			template:"<span class='webix_icon #icon#'></span> #value# ",
 			data:[
-				{ value:"Contacts", id:"contacts", icon:"wxi-user" },
-				{ value:"Data",		 id:"data",  icon:"wxi-columns" },
-				{ value:"Setting subviews",	id:"setSubs", icon:"wxi-pencil" }
+				{ value:_("Contacts"), id:"contacts", icon:"wxi-user" },
+				{ value:_("Data"), id:"data",  icon:"wxi-columns" },
+				{ value:_("Settings"),	id:"setSubs", icon:"wxi-pencil" }
 			]
 		};
 

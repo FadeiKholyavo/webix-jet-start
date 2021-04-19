@@ -1,0 +1,23 @@
+export default {
+	"Language":"Язык",
+	"Russian": "Русский",
+	"English": "Английский",
+	"Settings" : "Настройки",
+	"Data" : "Данные",
+	"Contacts" : "Контакты",
+	"App": "Приложение",
+	"Countries":"Страны",
+	"Name":"Название",
+	"Name ":"Имя",
+	"Statuses":"Статусы",
+	"Unselect":"Отменить выбор",
+	"Clear":"Отчистить",
+	"Save":"Сохранить",
+	"Icon": "Иконка",
+	"edit data":"редактирование данных",
+	"edit user":"редактрование пользователя",
+	"Status": "Статус",
+	"Country": "Страна",
+	"Email": "Email",
+	"id": "id"
+};

@@ -6,76 +6,77 @@ import {statuses} from "../models/statuses.js";
 
 export default class СontactsFormView extends JetView{
 	config(){
+		const _ = this.app.getService("locale")._;
 		return {
-				
 			view: "form",
-            localId: "contactsForm",
+			localId: "contactsForm",
 			width: 400,
 			scroll: false,
 			elements: [
 				{
 					view: "template",
-					template: "edit user",
+					template: _("edit user"),
 					type: "section",
 					css: "section-font-size"
 				},
 				{ 
 					view: "text",
-					label: "Name",
+					label: _("Name "),
 					name: "Name",
 					invalidMessage: "Enter the name"
 				},
 				{ 
 					view: "text",
-					label: "Email",
+					label: _("Email"),
 					name: "Email",
 					invalidMessage: "Enter the email"
 				},
 				{ 
 					view: "combo",
-					label: "Status",
+					label: _("Status"),
 					name: "Status",
 					invalidMessage: "Status cannot be empty",
-                    options: statuses
+					options: statuses
 				},
 				{ 
 					view: "combo",
-					label: "Country",
+					label: _("Country"),
 					name: "Country",
 					invalidMessage: "Country cannot be empty",
-                    options: countries
+					options: countries
 				},
-					{
-						cols:[
-						    { 
-								view: "button", 
-								value: "Save",
-								css: "webix_primary",		
-								click: () =>{
-									this.saveData(this.getSubView().$$("contactsList"),this.$$("contactsForm"));
-								}						
-							},
-							{ 
-								view: "button", 
-								value: "Clear",	
-								click: () =>{
-									this.clearForm(this.$$("contactsForm"));
-								}	
+				{
+					cols:[
+						{ 
+							view: "button", 
+							value: _("Save"),
+							css: "webix_primary",		
+							click: () =>{
+								this.saveData(this.getSubView().$$("contactsList"),this.$$("contactsForm"));
+							}						
+						},
+						{ 
+							view: "button", 
+							value: _("Clear"),	
+							click: () =>{
+								this.clearForm(this.$$("contactsForm"));
+							}	
 
-							},
-							{ 
-								view: "button", 
-								value: "Unselect",	
-								click: ()=>{
-									this.getSubView().$$("contactsList").unselectAll()
-									this.setParam("user", "", true);
-									this.$$("contactsForm").clear();
+						},
+						{ 
+							view: "button", 
+							value: _("Unselect"),	
+							height: 45,
+							click: ()=>{
+								this.getSubView().$$("contactsList").unselectAll();
+								this.setParam("user", "", true);
+								this.$$("contactsForm").clear();
 									
-								}
 							}
-						]
-					},
-					{}
+						}
+					]
+				},
+				{}
 			],
 			rules:{
 				Name: webix.rules.isNotEmpty,
@@ -90,7 +91,7 @@ export default class СontactsFormView extends JetView{
 			const id = url[0].params.user;
 			this.$$("contactsForm").setValues(contacts.getItem(id));
 		}else{
-			this.$$("contactsForm").clear()
+			this.$$("contactsForm").clear();
 		}
 	}
 	clearForm(form){
@@ -118,11 +119,11 @@ export default class СontactsFormView extends JetView{
 	
 				if(table.exists(formItemId)){
 	
-					contacts.updateItem(formItemId, formItem)
+					contacts.updateItem(formItemId, formItem);
 	
 				}else{
 
-					contacts.add(formItem)	
+					contacts.add(formItem);	
 
 				}
 	
@@ -157,6 +158,6 @@ export default class СontactsFormView extends JetView{
 		);
 	}
 	clear(){
-		this.$$("contactsForm").clear()
+		this.$$("contactsForm").clear();
 	}
 }

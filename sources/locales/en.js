@@ -1,0 +1,23 @@
+export default {
+	"Language":"Language",
+	"Settings" : "Settings",
+	"Russian": "Russian",
+	"English": "English",
+	"Data" : "Data",
+	"Contacts" : "Start",
+	"App": "App",
+	"Countries":"Countries",
+	"Name":"Name",
+	"Name ":"Name",
+	"Icon": "Icon",
+	"Statuses":"Statuses",
+	"Unselect":"Unselect",
+	"Clear":"Clear",
+	"Save":"Save",
+	"edit data":"edit data",
+	"edit user":"edit user",
+	"Status": "Status",
+	"Country": "Country",
+	"Email": "Email",
+	"id": "id"
+};

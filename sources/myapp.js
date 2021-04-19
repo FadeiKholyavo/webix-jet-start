@@ -1,6 +1,6 @@
 import "./styles/app.css";
 import {JetApp, EmptyRouter, HashRouter, plugins } from "webix-jet";
-import State from "./helpers/state.js"
+import State from "./helpers/state.js";
 
 export default class MyApp extends JetApp{
 	constructor(config){
