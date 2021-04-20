@@ -106,14 +106,15 @@ export default class CommonDatatableView extends JetView {
 	}
 	deleteItem(tablelItemId){
 		const form = this.form;
-		const table = this.datatable;
+		const data = this.data;
 		webix.confirm({
 			title: "Country deleting",
 			text: "Do you really want to delete this information"
 		}).then(
 			function(){
 				const formItemId = form.getValues().id;
-				table.remove(tablelItemId);
+				
+				data.remove(tablelItemId);
 
 				if(formItemId == tablelItemId.row){
 					form.clear();
