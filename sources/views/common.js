@@ -9,6 +9,8 @@ export default class CommonDatatableView extends JetView {
 		this._ = this.app.getService("locale")._;
 	}
 	config(){		
+		
+		
 		const datatable = {
 			view:"datatable",
 			scroll: "y",
@@ -24,8 +26,7 @@ export default class CommonDatatableView extends JetView {
 			}
 		};
 
-		this.addColumns(datatable);
-		
+
 		const form = {
 			view:"form",
 			localId: "form",
@@ -33,9 +34,9 @@ export default class CommonDatatableView extends JetView {
 			elements: [],
 			rules:{}
 		};
-
+	
 		this.addFields(form);
-
+	
 		return {cols:[
 			datatable,
 			form
@@ -44,21 +45,13 @@ export default class CommonDatatableView extends JetView {
 	init(){
 		this.datatable = this.$$("datatable");
 		this.form = this.$$("form");
-		this.datatable.parse(this.data);
+		this.data.waitData.then(()=>{
+			this.datatable.parse(this.data);	
+			this.addColumns(this.datatable);
+		});
 	}
 	ready(){
-		
-		const dataTable = this.datatable;
-		dataTable.config.columns.push(
-			{ 
-				id:"delete", 
-				header: "", 
-				template:"{common.trashIcon()}", 
-				width: 60
-			}
-		);
-		dataTable.refreshColumns();
-		this.form.bind(dataTable);
+		this.form.bind(this.datatable);
 	}
 	clearForm(){
 		const form = this.form;
@@ -88,12 +81,12 @@ export default class CommonDatatableView extends JetView {
 				formItem.Icon = formItem.Icon ? webix.template.escape(formItem.Icon): "";
 
 				if(table.exists(formItemId)){
-	
-					form.save();
-	
+
+					this.data.updateItem(formItemId,formItem);
+
 				}else{
 
-					form.save(formItem);		
+					this.data.add(formItem);	
 
 				}
 	
@@ -175,13 +168,28 @@ export default class CommonDatatableView extends JetView {
 		form.elements.push({});
 	}
 	addColumns(datatable){
-		datatable.columns = Object.keys(this.data[0]).map(key => {
-			return				{ 
+	
+		const data = this.data.getItem(this.data.getFirstId());
+			
+		datatable.config.columns = Object.keys(data).filter(key =>{
+			return key != "Code";
+		}).map(key => {
+			return{ 
 				id: key, 
 				header: this._(key), 
 				fillspace: true
 			};
 		});
+	
+		datatable.config.columns.push(
+			{ 
+				id:"delete", 
+				header: "", 
+				template:"{common.trashIcon()}", 
+				width: 60
+			}
+		);
+		datatable.refreshColumns();
 	}
 }
 

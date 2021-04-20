@@ -44,13 +44,16 @@ export default class СontactsView extends JetView{
 							view: "button",
 							value: "Add",
 							click: () => {
-								const id = contacts.add({
-									Name: "Name",
-									Country: 1,
-									Email: "mail@mail.com",
-									Status: 1
+								contacts.waitSave(function(){
+									this.add({
+										Name: "Name",
+										Country: 1,
+										Email: "mail@mail.com",
+										Status: 1
+									});
+								}).then( obj =>{
+									this.contactsList.select(obj.id);
 								});
-								this.contactsList.select(id);
 							}
 						}
 					]
@@ -64,9 +67,8 @@ export default class СontactsView extends JetView{
 		this.contactsList.parse(contacts);
 	}
 	urlChange(view, url){
-		
 		contacts.waitData.then(()=>{
-			const id = url[0].params.user > 100000 ? contacts.getLastId() : url[0].params.user ;
+			const id = url[0].params.user  ;
 			if(!!id && contacts.exists(id)){
 				this.contactsList.select(id);
 			}else{
@@ -74,6 +76,6 @@ export default class СontactsView extends JetView{
 				this.setParam("user", contactId, true);
 				this.contactsList.select(contactId);
 			}
-		})
+		});
 	}
 }
