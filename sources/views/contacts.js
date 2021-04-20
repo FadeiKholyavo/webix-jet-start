@@ -44,13 +44,13 @@ export default class СontactsView extends JetView{
 							view: "button",
 							value: "Add",
 							click: () => {
-								contacts.add({
+								const id = contacts.add({
 									Name: "Name",
 									Country: 1,
 									Email: "mail@mail.com",
 									Status: 1
 								});
-								this.setParam("user", contacts.getLastId(), true);
+								this.contactsList.select(id);
 							}
 						}
 					]
