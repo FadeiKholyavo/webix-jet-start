@@ -90,13 +90,18 @@ export default class СontactsFormView extends JetView{
 		this.contactsList= this.getParentView().$$("contactsList");
 	}
 	urlChange(view, url){
-		const form = this.contactsForm;
-		const id = url[0].params.user;
-		if(!!id && contacts.exists(id)){
-			form.setValues(contacts.getItem(id));
-		}else{
-			form.clear();
-		}
+		webix.promise.all([
+			statuses.waitData,
+			countries.waitData
+		]).then(()=>{
+			const form = this.contactsForm;
+			const id = url[0].params.user;
+			if(!!id && contacts.exists(id)){
+				form.setValues(contacts.getItem(id));
+			}else{
+				form.clear();
+			}
+		});
 	}
 	clearForm(){
 		const list = this.contactsList;
