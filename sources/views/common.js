@@ -10,7 +10,6 @@ export default class CommonDatatableView extends JetView {
 	}
 	config(){		
 		
-		
 		const datatable = {
 			view:"datatable",
 			scroll: "y",
@@ -46,7 +45,7 @@ export default class CommonDatatableView extends JetView {
 		this.datatable = this.$$("datatable");
 		this.form = this.$$("form");
 		this.data.waitData.then(()=>{
-			this.datatable.parse(this.data);	
+			this.datatable.sync(this.data);
 			this.addColumns(this.datatable);
 		});
 	}
@@ -55,12 +54,17 @@ export default class CommonDatatableView extends JetView {
 	}
 	clearForm(){
 		const form = this.form;
+		const datatable = this.datatable;
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
 		}).then(
 			function(){
+				const id = form.getValues().id;
 				form.clear();
+				if(id == datatable.getSelectedId()){
+					form.setValues({id: id });
+				}
 				form.clearValidation();
 			}
 		);
@@ -73,8 +77,7 @@ export default class CommonDatatableView extends JetView {
 			
 			const formItem = form.getValues();
 			const formItemId = formItem.id;
-			
-			
+
 			if(form.isDirty()){
 				//Protection against XSS
 				formItem.Name = webix.template.escape(formItem.Name);
@@ -85,9 +88,15 @@ export default class CommonDatatableView extends JetView {
 					this.data.updateItem(formItemId,formItem);
 
 				}else{
-
-					this.data.add(formItem);	
-
+						
+					this.data.waitSave(()=>{
+						const formItem = form.getValues();
+						this.data.add(formItem);
+					}).then(()=>{
+						if(this.datatable.getColumns() == 0){
+							this.addColumns(this.datatable);
+						}	
+					});
 				}
 	
 				webix.message({
@@ -171,9 +180,9 @@ export default class CommonDatatableView extends JetView {
 	addColumns(datatable){
 	
 		const data = this.data.getItem(this.data.getFirstId());
-			
+	
 		datatable.config.columns = Object.keys(data).filter(key =>{
-			return key != "Code";
+			return key != "Code" && key != "id";
 		}).map(key => {
 			return{ 
 				id: key, 
@@ -181,6 +190,13 @@ export default class CommonDatatableView extends JetView {
 				fillspace: true
 			};
 		});
+		datatable.config.columns.unshift(
+			{ 
+				id:"id", 
+				header: "id", 
+				width: 60
+			}
+		);
 	
 		datatable.config.columns.push(
 			{ 

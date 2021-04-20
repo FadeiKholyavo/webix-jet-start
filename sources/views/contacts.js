@@ -18,7 +18,7 @@ export default class СontactsView extends JetView{
 								height: "auto"
 							},
 							on:{
-								"onSelectChange": (id) =>{
+								"onAfterSelect": (id) =>{
 									this.setParam("user", id, true);
 								}		
 							},
@@ -65,7 +65,7 @@ export default class СontactsView extends JetView{
 	}
 	init(){
 		this.contactsList = this.$$("contactsList");
-		this.contactsList.parse(contacts);
+		this.contactsList.sync(contacts);
 	}
 	urlChange(view, url){
 		contacts.waitData.then(()=>{
