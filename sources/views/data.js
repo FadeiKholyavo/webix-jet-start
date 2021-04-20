@@ -5,15 +5,16 @@ import {statuses} from "../models/statuses.js";
 
 export default class DataView extends JetView{
 	config(){
+		const _ = this.app.getService("locale")._;
 		return { 
 			view:"tabview",
 			cells: [
 				{
-					header: "Countries",
+					header: _("Countries"),
 					body:	new Datatable(this.app, "", ["Name"], countries)
 				},
 				{
-					header: "Statuses",
+					header: _("Statuses"),
 					body:	new Datatable(this.app, "", ["Name","Icon"], statuses)
 				},
 			]

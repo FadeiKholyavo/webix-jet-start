@@ -1,84 +1,77 @@
 import {JetView} from "webix-jet";
 import {contacts} from "../models/contacts.js";
+import ContactsForm from "./contacts-form.js";
 
 export default class СontactsView extends JetView{
 	config(){
+		const _ = this.app.getService("locale")._;
 		return {
 			cols:[
-				{					
-					view:"list",
-					localId: "contactsList",
-					select:true,
-					template: "<span><b>#id#. #Name#</b><br>Email: #Email#,<br> Country: #Country# <br> Status: #Status#</span>",
-					type:{
-						height: "auto"
-					}
-				},
 				{
-					view: "form",
-					width: 300,
-					scroll: false,
-					elements: [
-						{
-							view: "template",
-							template: "edit user",
-							type: "section",
-							css: "section-font-size"
-						},
-						{ 
-							view: "text",
-							label: "Name",
-							name: "name",
-							invalidMessage: "Enter the title of the movie"
-						},
-						{ 
-							view: "text",
-							label: "Email",
-							name: "email",
-							invalidMessage: `Year isn't between 1970 - ${new Date().getFullYear()}`
-						},
-						{ 
-							view: "text",
-							label: "Status",
-							name: "status",
-							invalidMessage: "Rating cannot be empty or 0"
-						},
-						{ 
-							view: "text",
-							label: "Country",
-							name: "country",
-							invalidMessage: "Votes must be less than 100000"
-						},
-						{
-							cols:[
-								{ 
-									view: "button", 
-									value: "Save",
-									css: "webix_primary",							
-								},
-								{ 
-									view: "button", 
-									value: "Clear",	
-								},
-								{ 
-									view: "button", 
-									value: "Unselect",	
+					rows:[
+						{				
+							view:"list",
+							localId: "contactsList",
+							select:true,
+							template: `<div class="item-justify"><span><b>#id#. #Name#</b><br>Email: #Email#,<br> ${_("Country")}: #Country# <br> ${_("Status")}: #Status#</span><span class="webix_icon wxi-close"></span></div>`,
+							type:{
+								height: "auto"
+							},
+							on:{
+								"onSelectChange": (id) =>{
+									this.setParam("user", id, true);
+								}		
+							},
+							onClick: {
+								"wxi-close":(e, id)=>{
+									webix.confirm({
+										title: "User deleting",
+										text: "Do you really want to delete this user's information"
+									}).then(()=>{
+										const list = this.contactsList;
+										contacts.remove(id);
+										const newItemId = list.getSelectedId();
+										if(!newItemId){
+											this.app.show("/top/contacts");
+										}
+									}
+									);
+									return false;
 								}
-							]
+							},
 						},
-						{}
-					],
-					rules:{
-						name: webix.rules.isNotEmpty,
-						email: webix.rules.isEmail,
-						status: webix.rules.isNumber,
-						country: webix.rules.isNotEmpty
-					}
-				}
+						{
+							view: "button",
+							value: "Add",
+							click: () => {
+								const id = contacts.add({
+									Name: "Name",
+									Country: 1,
+									Email: "mail@mail.com",
+									Status: 1
+								});
+								this.contactsList.select(id);
+							}
+						}
+					]
+				},
+				ContactsForm
 			]
 		};
 	}
 	init(){
-		this.$$("contactsList").parse(contacts);
+		this.contactsList = this.$$("contactsList");
+		this.contactsList.parse(contacts);
+	}
+	urlChange(view, url){
+		
+		const id = url[0].params.user;
+		if(!!id && contacts.exists(id)){
+			this.contactsList.select(id);
+		}else{
+			const contactId = contacts.getFirstId();
+			this.setParam("user", contactId, true);
+			this.contactsList.select(contactId);
+		}
 	}
 }

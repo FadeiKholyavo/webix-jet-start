@@ -6,77 +6,35 @@ export default class CommonDatatableView extends JetView {
 		super(app, name); 
 		this.settings = settings;
 		this.data = data;
+		this._ = this.app.getService("locale")._;
 	}
-	config(){
-		
+	config(){		
 		const datatable = {
 			view:"datatable",
 			scroll: "y",
 			select: true,
 			localId: "datatable",
 			hover: "datatable-hover",
-			autoConfig: true,
+			columns:[],
 			onClick: {
 				"wxi-trash":(e, id) =>{
-					this.deleteItem(this.$$("datatable"),this.$$("form"), id);
+					this.deleteItem(id);
 					return false;
 				}
 			}
 		};
 
-		const elements = [];
-
+		this.addColumns(datatable);
+		
 		const form = {
 			view:"form",
 			localId: "form",
-			width: 300,
-			elements: elements,
+			width: 400,
+			elements: [],
 			rules:{}
 		};
 
-		elements.push({
-			view: "template",
-			template: "edit data",
-			type: "section",
-			css: "section-font-size"
-		});
-
-		this.settings.forEach( el =>{
-			form.rules[el] = webix.rules.isNotEmpty
-			elements.push({
-				view: "text",
-				label: el,
-				name: el,
-				invalidMessage: `Enter the ${el.toLowerCase()}`,
-			});
-		});
-		elements.push({			
-			cols:[
-				{ 
-					view: "button", 
-					value: "Save",
-					css: "webix_primary",		
-					click: () => {
-						this.saveData(this.$$("datatable"),this.$$("form"));
-					}						
-				},
-				{ 
-					view: "button", 
-					value: "Clear",
-					click: () => {
-						this.clearForm(this.$$("form"));
-					}	
-				},
-				{ 
-					view: "button", 
-					value: "Unselect",
-					click: () => {
-						this.$$("datatable").unselectAll();
-					}
-				}
-			]
-		});
-		elements.push({});
+		this.addFields(form);
 
 		return {cols:[
 			datatable,
@@ -84,17 +42,13 @@ export default class CommonDatatableView extends JetView {
 		]};
 	}
 	init(){
-		this.$$("datatable").parse(this.data);
+		this.datatable = this.$$("datatable");
+		this.form = this.$$("form");
+		this.datatable.parse(this.data);
 	}
 	ready(){
-		const dataTable = this.$$("datatable");
-		dataTable.config.columns.unshift(
-			{ 
-				id:"id", 
-				header: "id", 
-				width: 60
-			}
-		);
+		
+		const dataTable = this.datatable;
 		dataTable.config.columns.push(
 			{ 
 				id:"delete", 
@@ -104,9 +58,10 @@ export default class CommonDatatableView extends JetView {
 			}
 		);
 		dataTable.refreshColumns();
-		this.$$("form").bind(dataTable);
+		this.form.bind(dataTable);
 	}
-	clearForm(form){
+	clearForm(){
+		const form = this.form;
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
@@ -117,7 +72,9 @@ export default class CommonDatatableView extends JetView {
 			}
 		);
 	}
-	saveData(table,form){
+	saveData(){
+		const form = this.form;
+		const table = this.datatable;
 
 		if(form.validate()){
 			
@@ -154,14 +111,15 @@ export default class CommonDatatableView extends JetView {
 			}	  
 		}
 	}
-	deleteItem(table, form, tablelItemId){
+	deleteItem(tablelItemId){
+		const form = this.form;
+		const table = this.datatable;
 		webix.confirm({
 			title: "Country deleting",
 			text: "Do you really want to delete this information"
 		}).then(
 			function(){
 				const formItemId = form.getValues().id;
-	
 				table.remove(tablelItemId);
 
 				if(formItemId == tablelItemId.row){
@@ -169,6 +127,61 @@ export default class CommonDatatableView extends JetView {
 				}
 			}
 		);
+	}
+	addFields(form){
+		form.elements.push({
+			view: "template",
+			template: this._("EditData"),
+			type: "section",
+			css: "section-font-size"
+		});
+
+		this.settings.forEach( el =>{
+			form.rules[el] = webix.rules.isNotEmpty;
+			form.elements.push({
+				view: "text",
+				label: this. _(el),
+				name: el,
+				invalidMessage: `Enter the ${el.toLowerCase()}`,
+			});
+		});
+		form.elements.push({			
+			cols:[
+				{ 
+					view: "button", 
+					value: this._("Save"),
+					css: "webix_primary",		
+					click: () => {
+						this.saveData();
+					}						
+				},
+				{ 
+					view: "button", 
+					value: this._("Clear"),
+					click: () => {
+						this.clearForm();
+					}	
+				},
+				{ 
+					view: "button", 
+					value: this._("Unselect"),
+					height: 45,
+					click: () => {
+						this.datatable.unselectAll();
+					}
+				}
+			]
+		});
+		form.elements.push({});
+	}
+	addColumns(datatable){
+		datatable.columns = Object.keys(this.data[0]).map(key => {
+			return				{ 
+				id: key, 
+				header: this._(key), 
+				fillspace: true
+			};
+		});
 	}
 }
 
