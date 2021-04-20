@@ -72,17 +72,6 @@ export default class СontactsFormView extends JetView{
 								this.clearForm();
 							}	
 
-						},
-						{ 
-							view: "button", 
-							value: _("Unselect"),	
-							height: 45,
-							click: ()=>{
-								this.contactsList.unselectAll();
-								this.app.show("/top/contacts");
-								this.contactsForm.clear();
-									
-							}
 						}
 					]
 				},
@@ -139,15 +128,7 @@ export default class СontactsFormView extends JetView{
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Email =  webix.template.escape(formItem.Email);
 	
-				if(contacts.exists(formItemId)){
-	
-					contacts.updateItem(formItemId, formItem);
-	
-				}else{
-
-					contacts.add(formItem);	
-
-				}
+				contacts.updateItem(formItemId, formItem);
 	
 				webix.message({
 					text: "Validation is succsessful",
