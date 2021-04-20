@@ -43,6 +43,7 @@ export default class СontactsView extends JetView{
 						{
 							view: "button",
 							value: "Add",
+							css: "webix_primary",	
 							click: () => {
 								contacts.waitSave(function(){
 									this.add({
