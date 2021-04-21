@@ -85,6 +85,7 @@ export default class CommonDatatableView extends JetView {
 
 				if(table.exists(formItemId)){
 
+					form.setDirty(false);
 					this.data.updateItem(formItemId,formItem);
 
 				}else{

@@ -127,12 +127,14 @@ export default class СontactsFormView extends JetView{
 			
 			const formItem = form.getValues();
 			const formItemId = formItem.id;
+			console.log(form.isDirty(), formItem)
 			
 			if(form.isDirty()){
 				//Protection against XSS
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Email =  webix.template.escape(formItem.Email);
-	
+
+				form.setDirty(false);
 				contacts.updateItem(formItemId, formItem);
 	
 				webix.message({
