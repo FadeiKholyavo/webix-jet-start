@@ -1,5 +1,7 @@
 import {JetView} from "webix-jet";
 import {contacts} from "../models/contacts.js";
+import {countries} from "../models/countries.js";
+import {statuses} from "../models/statuses.js";
 import ContactsForm from "./contacts-form.js";
 
 export default class СontactsView extends JetView{
@@ -13,12 +15,21 @@ export default class СontactsView extends JetView{
 							view:"list",
 							localId: "contactsList",
 							select:true,
-							template: `<div class="item-justify"><span><b>#id#. #Name#</b><br>Email: #Email#,<br> ${_("Country")}: #Country# <br> ${_("Status")}: #Status#</span><span class="webix_icon wxi-close"></span></div>`,
+							template: function(obj){
+								return `<div class="item-justify">
+											<span><b>${obj.id}. ${obj.Name}</b><br>
+													Email: ${obj.Email},<br> 
+													${_("Country")}: ${countries.getItem(obj.Country) && countries.getItem(obj.Country).Name || "1"} <br> 
+													${_("Status")}: ${statuses.getItem(obj.Status) && statuses.getItem(obj.Status).Name || "1"}
+											</span>
+											<span class="webix_icon wxi-close"></span>
+										</div>`;
+							},
 							type:{
 								height: "auto"
 							},
 							on:{
-								"onSelectChange": (id) =>{
+								"onAfterSelect": (id) =>{
 									this.setParam("user", id, true);
 								}		
 							},
@@ -43,14 +54,18 @@ export default class СontactsView extends JetView{
 						{
 							view: "button",
 							value: "Add",
+							css: "webix_primary",	
 							click: () => {
-								const id = contacts.add({
-									Name: "Name",
-									Country: 1,
-									Email: "mail@mail.com",
-									Status: 1
+								contacts.waitSave(function(){
+									this.add({
+										Name: "Name",
+										Country: countries.getFirstId(),
+										Email: "mail@mail.com",
+										Status: statuses.getFirstId()
+									});
+								}).then( obj =>{
+									this.contactsList.select(obj.id);
 								});
-								this.contactsList.select(id);
 							}
 						}
 					]
@@ -61,17 +76,29 @@ export default class СontactsView extends JetView{
 	}
 	init(){
 		this.contactsList = this.$$("contactsList");
-		this.contactsList.parse(contacts);
+		webix.promise.all([
+			countries.waitData,
+			statuses.waitData
+		]).then(()=>{
+			this.contactsList.sync(contacts);
+		});
+	
+		
+		
 	}
 	urlChange(view, url){
-		
-		const id = url[0].params.user;
-		if(!!id && contacts.exists(id)){
-			this.contactsList.select(id);
-		}else{
-			const contactId = contacts.getFirstId();
-			this.setParam("user", contactId, true);
-			this.contactsList.select(contactId);
-		}
+		webix.promise.all([
+			contacts.waitData,
+			countries.waitData,
+			statuses.waitData
+		]).then(()=>{
+			const id = url[0].params.user  ;
+			if(!!id && contacts.exists(id)){
+				this.contactsList.select(id);
+			}
+			else{
+				this.contactsList.select(contacts.getFirstId());
+			}
+		});
 	}
 }

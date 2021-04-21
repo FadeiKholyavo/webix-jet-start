@@ -40,6 +40,7 @@ export default class СontactsFormView extends JetView{
 						body: {
 							template: "#Name#",
 							data: statuses,	 
+							value: 1
 						}
 					}
 				},
@@ -90,13 +91,18 @@ export default class СontactsFormView extends JetView{
 		this.contactsList= this.getParentView().$$("contactsList");
 	}
 	urlChange(view, url){
-		const form = this.contactsForm;
-		const id = url[0].params.user;
-		if(!!id && contacts.exists(id)){
-			form.setValues(contacts.getItem(id));
-		}else{
-			form.clear();
-		}
+		webix.promise.all([
+			statuses.waitData,
+			countries.waitData
+		]).then(()=>{
+			const form = this.contactsForm;
+			const id = url[0].params.user;
+			if(!!id && contacts.exists(id)){
+				form.setValues(contacts.getItem(id));
+			}else{
+				form.clear();
+			}
+		});
 	}
 	clearForm(){
 		const list = this.contactsList;
@@ -127,7 +133,8 @@ export default class СontactsFormView extends JetView{
 				//Protection against XSS
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Email =  webix.template.escape(formItem.Email);
-	
+
+				form.setDirty(false);
 				contacts.updateItem(formItemId, formItem);
 	
 				webix.message({

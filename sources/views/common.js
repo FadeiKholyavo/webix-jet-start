@@ -9,6 +9,7 @@ export default class CommonDatatableView extends JetView {
 		this._ = this.app.getService("locale")._;
 	}
 	config(){		
+		
 		const datatable = {
 			view:"datatable",
 			scroll: "y",
@@ -24,8 +25,7 @@ export default class CommonDatatableView extends JetView {
 			}
 		};
 
-		this.addColumns(datatable);
-		
+
 		const form = {
 			view:"form",
 			localId: "form",
@@ -33,9 +33,9 @@ export default class CommonDatatableView extends JetView {
 			elements: [],
 			rules:{}
 		};
-
+	
 		this.addFields(form);
-
+	
 		return {cols:[
 			datatable,
 			form
@@ -44,30 +44,27 @@ export default class CommonDatatableView extends JetView {
 	init(){
 		this.datatable = this.$$("datatable");
 		this.form = this.$$("form");
-		this.datatable.parse(this.data);
+		this.data.waitData.then(()=>{
+			this.datatable.sync(this.data);
+			this.addColumns(this.datatable);
+		});
 	}
 	ready(){
-		
-		const dataTable = this.datatable;
-		dataTable.config.columns.push(
-			{ 
-				id:"delete", 
-				header: "", 
-				template:"{common.trashIcon()}", 
-				width: 60
-			}
-		);
-		dataTable.refreshColumns();
-		this.form.bind(dataTable);
+		this.form.bind(this.datatable);
 	}
 	clearForm(){
 		const form = this.form;
+		const datatable = this.datatable;
 		webix.confirm({
 			title: "Form cleaning",
 			text: "Do you realy want to clean up the form?"
 		}).then(
 			function(){
+				const id = form.getValues().id;
 				form.clear();
+				if(id == datatable.getSelectedId()){
+					form.setValues({id: id });
+				}
 				form.clearValidation();
 			}
 		);
@@ -80,21 +77,27 @@ export default class CommonDatatableView extends JetView {
 			
 			const formItem = form.getValues();
 			const formItemId = formItem.id;
-			
-			
+
 			if(form.isDirty()){
 				//Protection against XSS
 				formItem.Name = webix.template.escape(formItem.Name);
 				formItem.Icon = formItem.Icon ? webix.template.escape(formItem.Icon): "";
 
 				if(table.exists(formItemId)){
-	
-					form.save();
-	
+
+					form.setDirty(false);
+					this.data.updateItem(formItemId,formItem);
+
 				}else{
-
-					form.save(formItem);		
-
+						
+					this.data.waitSave(()=>{
+						const formItem = form.getValues();
+						this.data.add(formItem);
+					}).then(()=>{
+						if(this.datatable.getColumns() == 0){
+							this.addColumns(this.datatable);
+						}	
+					});
 				}
 	
 				webix.message({
@@ -113,14 +116,15 @@ export default class CommonDatatableView extends JetView {
 	}
 	deleteItem(tablelItemId){
 		const form = this.form;
-		const table = this.datatable;
+		const data = this.data;
 		webix.confirm({
 			title: "Country deleting",
 			text: "Do you really want to delete this information"
 		}).then(
 			function(){
 				const formItemId = form.getValues().id;
-				table.remove(tablelItemId);
+				
+				data.remove(tablelItemId);
 
 				if(formItemId == tablelItemId.row){
 					form.clear();
@@ -175,13 +179,35 @@ export default class CommonDatatableView extends JetView {
 		form.elements.push({});
 	}
 	addColumns(datatable){
-		datatable.columns = Object.keys(this.data[0]).map(key => {
-			return				{ 
+	
+		const data = this.data.getItem(this.data.getFirstId());
+	
+		datatable.config.columns = Object.keys(data).filter(key =>{
+			return key != "Code" && key != "id";
+		}).map(key => {
+			return{ 
 				id: key, 
 				header: this._(key), 
 				fillspace: true
 			};
 		});
+		datatable.config.columns.unshift(
+			{ 
+				id:"id", 
+				header: "id", 
+				width: 60
+			}
+		);
+	
+		datatable.config.columns.push(
+			{ 
+				id:"delete", 
+				header: "", 
+				template:"{common.trashIcon()}", 
+				width: 60
+			}
+		);
+		datatable.refreshColumns();
 	}
 }
 
