@@ -68,7 +68,6 @@ export default class СontactsView extends JetView{
 		this.contactsList.sync(contacts);
 	}
 	urlChange(view, url){
-		console.log(1)
 		contacts.waitData.then(()=>{
 			const id = url[0].params.user  ;
 			if(!!id && contacts.exists(id)){
