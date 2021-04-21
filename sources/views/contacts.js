@@ -68,14 +68,14 @@ export default class СontactsView extends JetView{
 		this.contactsList.sync(contacts);
 	}
 	urlChange(view, url){
+		console.log(1)
 		contacts.waitData.then(()=>{
 			const id = url[0].params.user  ;
 			if(!!id && contacts.exists(id)){
 				this.contactsList.select(id);
-			}else{
-				const contactId = contacts.getFirstId();
-				this.setParam("user", contactId, true);
-				this.contactsList.select(contactId);
+			}
+			else{
+				this.contactsList.select(contacts.getFirstId());
 			}
 		});
 	}
