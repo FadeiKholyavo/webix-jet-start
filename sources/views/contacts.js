@@ -1,5 +1,7 @@
 import {JetView} from "webix-jet";
 import {contacts} from "../models/contacts.js";
+import {countries} from "../models/countries.js";
+import {statuses} from "../models/statuses.js";
 import ContactsForm from "./contacts-form.js";
 
 export default class СontactsView extends JetView{
@@ -13,7 +15,16 @@ export default class СontactsView extends JetView{
 							view:"list",
 							localId: "contactsList",
 							select:true,
-							template: `<div class="item-justify"><span><b>#id#. #Name#</b><br>Email: #Email#,<br> ${_("Country")}: #Country# <br> ${_("Status")}: #Status#</span><span class="webix_icon wxi-close"></span></div>`,
+							template: function(obj){
+								return `<div class="item-justify">
+											<span><b>${obj.id}. ${obj.Name}</b><br>
+													Email: ${obj.Email},<br> 
+													${_("Country")}: ${countries.getItem(obj.Country) && countries.getItem(obj.Country).Name || "1"} <br> 
+													${_("Status")}: ${statuses.getItem(obj.Status) && statuses.getItem(obj.Status).Name || "1"}
+											</span>
+											<span class="webix_icon wxi-close"></span>
+										</div>`;
+							},
 							type:{
 								height: "auto"
 							},
@@ -48,9 +59,9 @@ export default class СontactsView extends JetView{
 								contacts.waitSave(function(){
 									this.add({
 										Name: "Name",
-										Country: 1,
+										Country: countries.getFirstId(),
 										Email: "mail@mail.com",
-										Status: 1
+										Status: statuses.getFirstId()
 									});
 								}).then( obj =>{
 									this.contactsList.select(obj.id);
@@ -65,10 +76,22 @@ export default class СontactsView extends JetView{
 	}
 	init(){
 		this.contactsList = this.$$("contactsList");
-		this.contactsList.sync(contacts);
+		webix.promise.all([
+			countries.waitData,
+			statuses.waitData
+		]).then(()=>{
+			this.contactsList.sync(contacts);
+		});
+	
+		
+		
 	}
 	urlChange(view, url){
-		contacts.waitData.then(()=>{
+		webix.promise.all([
+			contacts.waitData,
+			countries.waitData,
+			statuses.waitData
+		]).then(()=>{
 			const id = url[0].params.user  ;
 			if(!!id && contacts.exists(id)){
 				this.contactsList.select(id);

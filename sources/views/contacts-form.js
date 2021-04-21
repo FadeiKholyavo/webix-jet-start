@@ -40,6 +40,7 @@ export default class СontactsFormView extends JetView{
 						body: {
 							template: "#Name#",
 							data: statuses,	 
+							value: 1
 						}
 					}
 				},
@@ -127,7 +128,6 @@ export default class СontactsFormView extends JetView{
 			
 			const formItem = form.getValues();
 			const formItemId = formItem.id;
-			console.log(form.isDirty(), formItem)
 			
 			if(form.isDirty()){
 				//Protection against XSS
